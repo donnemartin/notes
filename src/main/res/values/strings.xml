@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Notes</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_note">NoteActivity</string>
+    <string name="note_title_hint">Enter a title for the note.</string>
+    <string name="note_text_hint">Enter text for the note.</string>
+    <string name="note_title_label">Title</string>
+    <string name="note_text_label">Text</string>
+    <string name="note_details_label">Details</string>
+    <string name="note_complete_label">Complete?</string>
+    <string name="notes_title">Notes</string>
+    <string name="date_picker_title">Date of Note:</string>
+    <string name="note_audio">Audio</string>
+    <string name="note_play">Play</string>
+    <string name="note_stop">Stop</string>
+    <string name="note_pause">Pause</string>
+    <string name="note_record">Record</string>
+
+</resources>
