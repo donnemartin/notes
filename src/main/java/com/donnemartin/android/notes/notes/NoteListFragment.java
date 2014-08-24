@@ -1,6 +1,8 @@
 package com.donnemartin.android.notes.notes;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.ListFragment;
@@ -17,17 +19,36 @@ import java.util.Date;
 public class NoteListFragment extends ListFragment
 {
     private ArrayList<Note> mNotes;
+    private boolean mSubtitleVisible;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        setRetainInstance(true);
+        mSubtitleVisible = false;
 
         getActivity().setTitle(R.string.notes_title);
         mNotes = Notebook.getInstance(getActivity()).getNotes();
 
         NoteAdapter adapter = new NoteAdapter(mNotes);
         setListAdapter(adapter);
+    }
+
+    @TargetApi(11)
+    @Override
+    public View onCreateView(LayoutInflater inflater,
+                             ViewGroup parent,
+                             Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, parent, savedInstanceState);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            if (mSubtitleVisible) {
+                getActivity().getActionBar().setSubtitle(R.string.subtitle);
+            }
+        }
+
+        return view;
     }
 
     @Override
@@ -54,8 +75,14 @@ public class NoteListFragment extends ListFragment
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_note_list, menu);
+
+        MenuItem showSubtitle = menu.findItem(R.id.menu_item_show_subtitle);
+        if (mSubtitleVisible && showSubtitle != null) {
+            showSubtitle.setTitle(R.string.hide_subtitle);
+        }
     }
 
+    @TargetApi(11)
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         boolean selectionHandled;
@@ -70,6 +97,17 @@ public class NoteListFragment extends ListFragment
                 intent.putExtra(NoteFragment.EXTRA_NOTE_ID, note.getId());
                 startActivityForResult(intent, 0);
 
+                selectionHandled = true;
+            case R.id.menu_item_show_subtitle:
+                if (getActivity().getActionBar().getSubtitle() == null) {
+                    getActivity().getActionBar().setSubtitle(R.string.subtitle);
+                    mSubtitleVisible = true;
+                    item.setTitle(R.string.hide_subtitle);
+                } else {
+                    getActivity().getActionBar().setSubtitle(null);
+                    mSubtitleVisible = false;
+                    item.setTitle(R.string.show_subtitle);
+                }
                 selectionHandled = true;
             default:
                 selectionHandled = super.onOptionsItemSelected(item);
