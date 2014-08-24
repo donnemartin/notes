@@ -13,7 +13,11 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -28,13 +32,15 @@ public class NoteFragment extends Fragment {
     private CheckBox mCompleteCheckBox;
     private Button mRecordButton;
     private Button mPlayButton;
-    private AudioPlayer mPlayer;
-    private AudioRecorder mRecorder;
+    private AudioPlayer mAudioPlayer;
+    private AudioRecorder mAudioRecorder;
 
     private static StringBuffer mAudioFileName;
 
     public static final String EXTRA_NOTE_ID =
         "com.donnemartin.android.notes.note_id";
+
+    private static final String AUDIO_POS_INDEX = "audio_pos_index";
 
     private static final String DIALOG_DATE = "date";
     private static final int REQUEST_DATE = 0;
@@ -91,6 +97,12 @@ public class NoteFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // XXX: Odd this doesn't keep MediaPlayer playing audio on rotation.
+        // Seems the fragment will only get re-used if you give the fragment an
+        // Id in the layout.
+        // Another alternative is to just use onSaveInstanceState(Bundle)
+        setRetainInstance(true);
+
         UUID noteId = (UUID)getArguments().getSerializable(EXTRA_NOTE_ID);
         mNote = Notebook.getInstance(getActivity()).getNote(noteId);
     }
@@ -108,8 +120,9 @@ public class NoteFragment extends Fragment {
                 .append(mNote.getTitle())
                 .append(".3gp");
 
-        mPlayer = new AudioPlayer(mAudioFileName.toString());
-        mRecorder = new AudioRecorder(mAudioFileName.toString());
+        String audioFileName = mAudioFileName.toString();
+        mAudioPlayer = new AudioPlayer(audioFileName);
+        mAudioRecorder = new AudioRecorder(audioFileName);
 
         // Inflated view is added to parent in the activity code
         View view = inflater.inflate(R.layout.fragment_note,
@@ -199,11 +212,11 @@ public class NoteFragment extends Fragment {
                 PackageManager pm = getActivity().getPackageManager();
 
                 if (pm.hasSystemFeature(PackageManager.FEATURE_MICROPHONE)) {
-                    if (mRecorder.isRecording()) {
-                        mRecorder.stopRecording();
+                    if (mAudioRecorder.isRecording()) {
+                        mAudioRecorder.stopRecording();
                         setStartRecordingButtonText();
                     } else {
-                        mRecorder.startRecording();
+                        mAudioRecorder.startRecording();
                         setStopRecordingButtonText();
                     }
                 } else {
@@ -219,15 +232,30 @@ public class NoteFragment extends Fragment {
         mPlayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mPlayer.isPlaying()) {
-                    mPlayer.stop();
+                if (mAudioPlayer.isPlaying()) {
+                    mAudioPlayer.stop();
                     setPlayAudioButtonText();
                 } else {
-                    mPlayer.play();
+                    mAudioPlayer.play(AudioPlayer.PLAY_FROM_START);
                     setStopAudioButtonText();
                 }
             }
         });
+
+//        if (savedInstanceState != null) {
+//            int position = savedInstanceState.getInt(AUDIO_POS_INDEX, 0);
+//
+//            if (mAudioPlayer != null && position > 0) {
+//                mAudioPlayer.play(position);
+//            }
+//        }
+//
+//        if (mAudioPlayer.isPlaying()) {
+//            setStopAudioButtonText();
+//        }
+//        else {
+//            setPlayAudioButtonText();
+//        }
 
         return view;
     }
@@ -247,6 +275,16 @@ public class NoteFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mPlayer.stop();
+        mAudioPlayer.stop();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+
+//        if (mAudioPlayer != null && mAudioPlayer.validMediaPlayer()) {
+//            savedInstanceState.putInt(AUDIO_POS_INDEX,
+//                                      mAudioPlayer.getCurrentPosition());
+//        }
     }
 }

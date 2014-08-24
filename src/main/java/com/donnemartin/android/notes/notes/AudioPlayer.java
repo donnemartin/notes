@@ -11,9 +11,20 @@ public class AudioPlayer {
     private static String mFileName;
 
     private static final String LOG_TAG = "AudioPlayer";
+    public static final int PLAY_FROM_START = 0;
 
     public AudioPlayer(String fileName) {
         mFileName = fileName;
+    }
+
+    public boolean validMediaPlayer() {
+        boolean validMediaPlayer = false;
+
+        if (mPlayer != null) {
+            validMediaPlayer = true;
+        }
+
+        return validMediaPlayer;
     }
 
     public boolean isPlaying() {
@@ -35,7 +46,7 @@ public class AudioPlayer {
         }
     }
 
-    public void play() {
+    public void play(int position) {
         // Keep exactly one MediaPlayer around and keep it
         // around only as long as it is playing something
         // Call stop here and set a listener to call stop() when the
@@ -57,9 +68,21 @@ public class AudioPlayer {
         try {
             mPlayer.setDataSource(mFileName);
             mPlayer.prepare();
+            mPlayer.seekTo(position);
             mPlayer.start();
         } catch (IOException e) {
             Log.e(LOG_TAG, "prepare() failed");
         }
+    }
+
+    public int getCurrentPosition()
+    {
+        int position = 0;
+
+        if (mPlayer != null) {
+            position = mPlayer.getCurrentPosition();
+        }
+
+        return position;
     }
 }

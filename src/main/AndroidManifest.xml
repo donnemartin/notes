@@ -7,7 +7,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature android:name="android.hardware.camera"
+                  android:required="false" />
 
     <application
             android:allowBackup="true"
@@ -15,14 +16,16 @@
             android:label="@string/app_name"
             android:theme="@style/AppTheme" >
         <activity
-                android:name="com.donnemartin.android.notes.notes.NoteListActivity">
+                android:name=
+                    "com.donnemartin.android.notes.notes.NoteListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-                android:name="com.donnemartin.android.notes.notes.NotePagerActivity"
+                android:name=
+                    "com.donnemartin.android.notes.notes.NotePagerActivity"
                 android:label="@string/app_name" >
         </activity>
     </application>
