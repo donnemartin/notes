@@ -96,11 +96,6 @@ public class NoteFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // XXX: Odd this doesn't keep MediaPlayer playing audio on rotation.
-        // Seems the fragment will only get re-used if you give the fragment an
-        // Id in the layout.
-        // Another alternative is to just use onSaveInstanceState(Bundle)
         setRetainInstance(true);
 
         UUID noteId = (UUID)getArguments().getSerializable(EXTRA_NOTE_ID);
@@ -242,21 +237,6 @@ public class NoteFragment extends Fragment {
             }
         });
 
-//        if (savedInstanceState != null) {
-//            int position = savedInstanceState.getInt(AUDIO_POS_INDEX, 0);
-//
-//            if (mAudioPlayer != null && position > 0) {
-//                mAudioPlayer.play(position);
-//            }
-//        }
-//
-//        if (mAudioPlayer.isPlaying()) {
-//            setStopAudioButtonText();
-//        }
-//        else {
-//            setPlayAudioButtonText();
-//        }
-
         return view;
     }
 
@@ -281,10 +261,5 @@ public class NoteFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-
-//        if (mAudioPlayer != null && mAudioPlayer.validMediaPlayer()) {
-//            savedInstanceState.putInt(AUDIO_POS_INDEX,
-//                                      mAudioPlayer.getCurrentPosition());
-//        }
     }
 }
