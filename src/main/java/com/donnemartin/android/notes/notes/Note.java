@@ -7,6 +7,7 @@ public class Note {
 
     private UUID mId;
     private String mTitle;
+    private String mContent;
     private Date mDate;
     private boolean mComplete;
 
@@ -36,6 +37,14 @@ public class Note {
 
     public void setTitle(String title) {
         mTitle = title;
+    }
+
+    public String getContent() {
+        return mContent;
+    }
+
+    public void setContent(String content) {
+        mContent = content;
     }
 
     public Note() {

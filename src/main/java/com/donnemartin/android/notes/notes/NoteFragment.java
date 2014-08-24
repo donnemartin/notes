@@ -23,6 +23,7 @@ public class NoteFragment extends Fragment {
 
     private Note mNote;
     private EditText mTitleField;
+    private EditText mContentField;
     private Button mDateButton;
     private CheckBox mCompleteCheckBox;
     private Button mRecordButton;
@@ -132,6 +133,31 @@ public class NoteFragment extends Fragment {
                                       int before,
                                       int count) {
                 mNote.setTitle(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // This space intentionally left blank
+            }
+        });
+
+        mContentField = (EditText)view.findViewById(R.id.note_content);
+        mContentField.setText(mNote.getContent());
+        mContentField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s,
+                                          int start,
+                                          int count,
+                                          int after) {
+                // This space intentionally left blank
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s,
+                                      int start,
+                                      int before,
+                                      int count) {
+                mNote.setContent(s.toString());
             }
 
             @Override
