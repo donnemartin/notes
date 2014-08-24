@@ -16,8 +16,7 @@ public class NotePagerActivity extends FragmentActivity
     private ArrayList<Note> mNotes;
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // FragmentManager requires that any view used as a fragment container
@@ -35,18 +34,15 @@ public class NotePagerActivity extends FragmentActivity
         // FragmentStatePagerAdapter is the agent managing the conversation
         // with ViewPager.  It adds the fragments returned to the activity
         // and helps ViewPager id the fragments' views for placement.
-        mViewPager.setAdapter(new FragmentStatePagerAdapter(fm)
-        {
+        mViewPager.setAdapter(new FragmentStatePagerAdapter(fm) {
             @Override
-            public Fragment getItem(int position)
-            {
+            public Fragment getItem(int position) {
                 Note note = mNotes.get(position);
                 return NoteFragment.newInstance((note.getId()));
             }
 
             @Override
-            public int getCount()
-            {
+            public int getCount() {
                 return mNotes.size();
             }
         });
@@ -58,13 +54,12 @@ public class NotePagerActivity extends FragmentActivity
             .getSerializableExtra(NoteFragment.EXTRA_NOTE_ID);
 
         int numNotes = mNotes.size();
-        Note note = null;
+        Note note;
 
-        for (int i = 0; i < numNotes; ++i)
-        {
+        for (int i = 0; i < numNotes; ++i) {
             note = mNotes.get(i);
-            if (note.getId().equals(noteId))
-            {
+
+            if (note.getId().equals(noteId)) {
                 mViewPager.setCurrentItem(i);
                 setTitle(note.getTitle());
                 break;
@@ -75,25 +70,22 @@ public class NotePagerActivity extends FragmentActivity
         // with the title of the current Note
         // OnPageChangeListener is how you listen for changes in the page
         // currently being displayed by ViewPager
-        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener()
-        {
-            public void onPageScrollStateChanged(int state)
-            {
-
+        mViewPager.setOnPageChangeListener
+            (new ViewPager.OnPageChangeListener() {
+            public void onPageScrollStateChanged(int state) {
+                // This space intentionally left blank
             }
 
             public void onPageScrolled(int pos,
                                        float posOffset,
-                                       int posOffsetPixels)
-            {
-
+                                       int posOffsetPixels) {
+                // This space intentionally left blank
             }
 
-            public void onPageSelected(int pos)
-            {
+            public void onPageSelected(int pos) {
                 Note note = mNotes.get(pos);
-                if (note.getTitle() != null)
-                {
+
+                if (note.getTitle() != null) {
                     setTitle(note.getTitle());
                 }
             }

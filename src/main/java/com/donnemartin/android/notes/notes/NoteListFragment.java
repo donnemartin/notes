@@ -19,11 +19,8 @@ public class NoteListFragment extends ListFragment
 {
     private ArrayList<Note> mNotes;
 
-    private static final String TAG = "NoteListFragment";
-
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getActivity().setTitle(R.string.notes_title);
         mNotes = Notebook.getInstance(getActivity()).getNotes();
@@ -33,8 +30,7 @@ public class NoteListFragment extends ListFragment
     }
 
     @Override
-    public void onListItemClick(ListView l, View v, int position, long id)
-    {
+    public void onListItemClick(ListView l, View v, int position, long id) {
         Note note = ((NoteAdapter)getListAdapter()).getItem(position);
 
         // Start NotePagerActivity with this note
@@ -46,30 +42,26 @@ public class NoteListFragment extends ListFragment
     }
 
     @Override
-    public void onResume()
-    // Update the list view onResume, as it might have been paused not killed
-    {
+    public void onResume() {
+        // Update the list view onResume,
+        // as it might have been paused not killed
         super.onResume();
         ((NoteAdapter)getListAdapter()).notifyDataSetChanged();
     }
 
-    private class NoteAdapter extends ArrayAdapter<Note>
-    {
-        public NoteAdapter(ArrayList<Note> notes)
-        {
+    private class NoteAdapter extends ArrayAdapter<Note> {
+        public NoteAdapter(ArrayList<Note> notes) {
             // Required to properly hook up dataset of Notes
             // Not using a pre-defined layout, so pass 0 for the layout ID
             super(getActivity(), 0, notes);
         }
 
         private String getFormattedDate(FragmentActivity activity,
-                                        Note note)
-        // XXX: Duplicated code, original in NoteFragment.java
-        {
+                                        Note note) {
+            // XXX: Duplicated code, original in NoteFragment.java
             String formattedDate = "";
 
-            if (activity != null)
-            {
+            if (activity != null) {
                 Date date = note.getDate();
                 DateFormat dateFormat = android.text.format.DateFormat
                         .getDateFormat(activity.getApplicationContext());
@@ -84,11 +76,9 @@ public class NoteListFragment extends ListFragment
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent)
-        {
+        public View getView(int position, View convertView, ViewGroup parent) {
             // If we weren't give a view, inflate one
-            if (convertView == null)
-            {
+            if (convertView == null) {
                 convertView = getActivity().getLayoutInflater()
                         .inflate(R.layout.list_item_note, null);
             }

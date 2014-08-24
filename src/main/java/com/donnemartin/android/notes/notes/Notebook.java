@@ -25,6 +25,7 @@ public class Notebook {
             // application context
             sNotebook = new Notebook(context.getApplicationContext());
         }
+
         return sNotebook;
     }
 

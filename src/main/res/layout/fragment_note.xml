@@ -23,7 +23,7 @@
         style="?android:listSeparatorTextViewStyle" />
 
     <EditText
-        android:id="@+id/note_text"
+        android:id="@+id/note_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -37,13 +37,6 @@
         android:text="@string/note_audio"
         style="?android:listSeparatorTextViewStyle" />
 
-    <Button
-        android:id="@+id/note_record"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/note_record" />
-
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -51,16 +44,17 @@
         android:orientation="horizontal" >
 
         <Button
+            android:id="@+id/note_record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/note_record" />
+
+        <Button
             android:id="@+id/note_play_pause"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/note_play" />
-
-        <Button
-            android:id="@+id/note_stop"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/note_stop" />
 
     </LinearLayout>
 
@@ -74,7 +68,7 @@
         android:id="@+id/note_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
+        android:layout_margin="16dp"
         android:layout_marginRight="16dp" />
 
     <CheckBox

@@ -17,5 +17,6 @@
     <string name="note_stop">Stop</string>
     <string name="note_pause">Pause</string>
     <string name="note_record">Record</string>
+    <string name="error_no_mic">No mic found!</string>
 
 </resources>
