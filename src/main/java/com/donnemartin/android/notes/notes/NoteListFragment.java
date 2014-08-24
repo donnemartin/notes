@@ -4,8 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.ListFragment;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
@@ -22,6 +21,8 @@ public class NoteListFragment extends ListFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+
         getActivity().setTitle(R.string.notes_title);
         mNotes = Notebook.getInstance(getActivity()).getNotes();
 
@@ -47,6 +48,34 @@ public class NoteListFragment extends ListFragment
         // as it might have been paused not killed
         super.onResume();
         ((NoteAdapter)getListAdapter()).notifyDataSetChanged();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_note_list, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        boolean selectionHandled;
+
+        switch (item.getItemId()) {
+            case R.id.menu_item_new_note:
+                Note note = new Note();
+                Notebook.getInstance(getActivity()).addNote(note);
+
+                Intent intent =
+                    new Intent(getActivity(), NotePagerActivity.class);
+                intent.putExtra(NoteFragment.EXTRA_NOTE_ID, note.getId());
+                startActivityForResult(intent, 0);
+
+                selectionHandled = true;
+            default:
+                selectionHandled = super.onOptionsItemSelected(item);
+        }
+
+        return selectionHandled;
     }
 
     private class NoteAdapter extends ArrayAdapter<Note> {

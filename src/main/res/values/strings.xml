@@ -18,5 +18,10 @@
     <string name="note_pause">Pause</string>
     <string name="note_record">Record</string>
     <string name="error_no_mic">No mic found!</string>
+    <string name="new_note">New Note</string>
+    <string name="show_subtitle">Show Subtitle</string>
+    <string name="hide_subtitle">Hide Subtitle</string>
+    <string name="subtitle">Remember Everything</string>
+    <string name="delete_note">Delete</string>
 
 </resources>

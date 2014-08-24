@@ -38,6 +38,10 @@ public class Notebook {
         }
     }
 
+    public void addNote(Note note) {
+        mNotes.add(note);
+    }
+
     public ArrayList<Note> getNotes() {
         return mNotes;
     }

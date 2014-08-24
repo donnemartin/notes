@@ -1,16 +1,20 @@
 package com.donnemartin.android.notes.notes;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.NavUtils;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -102,6 +106,7 @@ public class NoteFragment extends Fragment {
         mNote = Notebook.getInstance(getActivity()).getNote(noteId);
     }
 
+    @TargetApi(11)
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup parent,
@@ -123,6 +128,14 @@ public class NoteFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_note,
                                   parent,
                                   false);
+
+        setHasOptionsMenu(true);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            if (NavUtils.getParentActivityName(getActivity()) != null) {
+                getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
+            }
+        }
 
         mTitleField = (EditText)view.findViewById(R.id.note_title);
         mTitleField.setText(mNote.getTitle());
@@ -261,5 +274,22 @@ public class NoteFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        boolean selectionHandled;
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                if (NavUtils.getParentActivityName(getActivity()) != null) {
+                    NavUtils.navigateUpFromSameTask(getActivity());
+                }
+                selectionHandled = true;
+            default:
+                selectionHandled = super.onOptionsItemSelected(item);
+        }
+
+        return selectionHandled;
     }
 }
