@@ -1,6 +1,7 @@
 package com.donnemartin.android.notes.notes;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -10,11 +11,22 @@ public class Notebook {
     private ArrayList<Note> mNotes;
     private static Notebook sNotebook;
     private Context mAppContext;
+    private NoteIntentJSONSerializer mSerializer;
+
+
+    private static final String TAG = "Notebook";
+    private static final String FILENAME = "notes.json";
 
     private Notebook(Context appContext) {
         mAppContext = appContext;
-        mNotes = new ArrayList<Note>();
-        generateTestNotes();
+        mSerializer = new NoteIntentJSONSerializer(mAppContext, FILENAME);
+
+        try {
+            mNotes = mSerializer.loadNotes();
+        } catch (Exception e) {
+            mNotes = new ArrayList<Note>();
+            Log.e(TAG, "Error loading notes: ", e);
+        }
     }
 
     public static Notebook getInstance(Context context) {
@@ -29,21 +41,26 @@ public class Notebook {
         return sNotebook;
     }
 
-    private void generateTestNotes() {
-        for (int i = 0; i < 5; ++i) {
-            Note note = new Note();
-            note.setTitle("Note " + i);
-            note.setComplete(i % 2 == 0);
-            mNotes.add(note);
-        }
-    }
+    public boolean saveNotes() {
+        boolean success = false;
 
-    public void addNote(Note note) {
-        mNotes.add(note);
+        try {
+            mSerializer.saveNotes(mNotes);
+            Log.d(TAG, "Notes saved to file");
+            success = true;
+        } catch (Exception e) {
+            Log.e(TAG, "Error saving notes: ", e);
+        }
+
+        return success;
     }
 
     public ArrayList<Note> getNotes() {
         return mNotes;
+    }
+
+    public void addNote(Note note) {
+        mNotes.add(note);
     }
 
     public Note getNote(UUID id) {

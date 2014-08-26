@@ -98,6 +98,7 @@ public class NoteListFragment extends ListFragment
                 startActivityForResult(intent, 0);
 
                 selectionHandled = true;
+                break;
             case R.id.menu_item_show_subtitle:
                 if (getActivity().getActionBar().getSubtitle() == null) {
                     getActivity().getActionBar().setSubtitle(R.string.subtitle);
@@ -109,8 +110,10 @@ public class NoteListFragment extends ListFragment
                     item.setTitle(R.string.show_subtitle);
                 }
                 selectionHandled = true;
+                break;
             default:
                 selectionHandled = super.onOptionsItemSelected(item);
+                break;
         }
 
         return selectionHandled;

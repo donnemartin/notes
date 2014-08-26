@@ -18,13 +18,13 @@ public class AudioPlayer {
     }
 
     public boolean validMediaPlayer() {
-        boolean validMediaPlayer = false;
+        boolean isValidMediaPlayer = false;
 
         if (mPlayer != null) {
-            validMediaPlayer = true;
+            isValidMediaPlayer = true;
         }
 
-        return validMediaPlayer;
+        return isValidMediaPlayer;
     }
 
     public boolean isPlaying() {

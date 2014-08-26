@@ -113,6 +113,7 @@ public class NoteFragment extends Fragment {
                              Bundle savedInstanceState) {
         // XXX: Might be a problem if a title contains characters that
         // are not allowed by the Android file system
+        // Ask the user to supply a file name instead
         mAudioFileName = new StringBuffer(Environment
             .getExternalStorageDirectory().getAbsolutePath());
         mAudioFileName
@@ -121,8 +122,10 @@ public class NoteFragment extends Fragment {
                 .append(".3gp");
 
         String audioFileName = mAudioFileName.toString();
-        mAudioPlayer = new AudioPlayer(audioFileName);
-        mAudioRecorder = new AudioRecorder(audioFileName);
+        mNote.setAudioFilename(audioFileName);
+
+        mAudioPlayer = new AudioPlayer(mNote.getAudioFilename());
+        mAudioRecorder = new AudioRecorder(mNote.getAudioFilename());
 
         // Inflated view is added to parent in the activity code
         View view = inflater.inflate(R.layout.fragment_note,
@@ -286,10 +289,30 @@ public class NoteFragment extends Fragment {
                     NavUtils.navigateUpFromSameTask(getActivity());
                 }
                 selectionHandled = true;
+                break;
             default:
                 selectionHandled = super.onOptionsItemSelected(item);
+                break;
         }
 
         return selectionHandled;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        // onPause() is the safest choice to save notes.
+        // onStop() or onDestroy() might not work.
+        // A paused activity will be destroyed if the OS needs to
+        // reclaim memory, where you cannot count on onStop() or onDestroy()
+        boolean success = Notebook.getInstance(getActivity()).saveNotes();
+
+        if (!success) {
+            Toast.makeText(getActivity(),
+                           getResources()
+                                   .getString(R.string.error_saving),
+                           Toast.LENGTH_LONG).show();
+        }
     }
 }
