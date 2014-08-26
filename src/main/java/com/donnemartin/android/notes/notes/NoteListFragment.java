@@ -48,7 +48,88 @@ public class NoteListFragment extends ListFragment
         // getListView() will also retrieve the view, but returns null
         // until after onCreateView returns
         ListView listView = (ListView) view.findViewById(android.R.id.list);
-        registerForContextMenu(listView);
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+            // Use floating context menu on Froyo and Gingerbread
+            registerForContextMenu(listView);
+        } else {
+            // Use contextual action bar on Honeycomb and higher
+            listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+            listView.setMultiChoiceModeListener(
+                new AbsListView.MultiChoiceModeListener() {
+                @Override
+                public void onItemCheckedStateChanged(ActionMode mode,
+                                                      int position,
+                                                      long id,
+                                                      boolean checked) {
+                    // This space intentionally left blank
+                }
+
+                @Override
+                public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                    // Called when ActionMode is created to inflate the menu
+                    // Use the inflater from the action mode rather than the
+                    // activity, because it has details for configuring
+                    // the contextual action bar
+                    MenuInflater inflater = mode.getMenuInflater();
+                    inflater.inflate(R.menu.note_list_item_context, menu);
+                    return true;
+                }
+
+                @Override
+                public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                    // Called after onCreateActionMode and whenever an existing
+                    // contextual action bar needs to be refreshed with new data
+                    // This space intentionally left blank
+                    return false;
+                }
+
+                @Override
+                public boolean onActionItemClicked(ActionMode mode,
+                                                   MenuItem item) {
+                    // Called when the user selects an action
+                    boolean selectionHandled;
+
+                    switch (item.getItemId()) {
+                        case R.id.menu_item_delete_note:
+                            NoteAdapter adapter =
+                                (NoteAdapter)getListAdapter();
+                            Notebook notebook =
+                                Notebook.getInstance(getActivity());
+
+                            for (int i = adapter.getCount() - 1; i >= 0; i--) {
+                                if (getListView().isItemChecked(i)) {
+                                    notebook.deleteNote(adapter.getItem(i));
+                                }
+                            }
+
+                            Toast
+                                .makeText(getActivity(),
+                                          getResources()
+                                            .getString(R.string.notes_deleted),
+                                          Toast.LENGTH_LONG).show();
+
+                            // Prepare the action mode to be destroyed
+                            mode.finish();
+                            adapter.notifyDataSetChanged();
+                            selectionHandled = true;
+                            break;
+                        default:
+                            selectionHandled = false;
+                            break;
+                    }
+
+                    return selectionHandled;
+                }
+
+                @Override
+                public void onDestroyActionMode(ActionMode mode) {
+                    // Called when ActionMode is about the be destroyed from
+                    // the user cancelling or the action being responded to
+                    // This space intentionally left blank
+                }
+            });
+        }
 
         return view;
     }

@@ -24,5 +24,6 @@
     <string name="hide_subtitle">Hide Subtitle</string>
     <string name="subtitle">Remember Everything</string>
     <string name="delete_note">Delete</string>
+    <string name="notes_deleted">Note(s) Deleted</string>
 
 </resources>
