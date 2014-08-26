@@ -63,6 +63,10 @@ public class Notebook {
         mNotes.add(note);
     }
 
+    public void deleteNote(Note note) {
+        mNotes.remove(note);
+    }
+
     public Note getNote(UUID id) {
         Note matchNote = null;
 

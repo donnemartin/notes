@@ -114,6 +114,8 @@ public class NoteFragment extends Fragment {
         // XXX: Might be a problem if a title contains characters that
         // are not allowed by the Android file system
         // Ask the user to supply a file name instead
+        // This is also written to external storage, whereas
+        // the notes are saved to internal memory
         mAudioFileName = new StringBuffer(Environment
             .getExternalStorageDirectory().getAbsolutePath());
         mAudioFileName

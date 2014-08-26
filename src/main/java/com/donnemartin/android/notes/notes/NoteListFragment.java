@@ -7,10 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.ListFragment;
 import android.view.*;
-import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.*;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -48,27 +45,12 @@ public class NoteListFragment extends ListFragment
             }
         }
 
+        // getListView() will also retrieve the view, but returns null
+        // until after onCreateView returns
+        ListView listView = (ListView) view.findViewById(android.R.id.list);
+        registerForContextMenu(listView);
+
         return view;
-    }
-
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        Note note = ((NoteAdapter)getListAdapter()).getItem(position);
-
-        // Start NotePagerActivity with this note
-        // NoteListFragment uses getActivity() to pass its hosting
-        // activity as the Context object that the Intent constructor needs
-        Intent intent = new Intent(getActivity(), NotePagerActivity.class);
-        intent.putExtra(NoteFragment.EXTRA_NOTE_ID, note.getId());
-        startActivity(intent);
-    }
-
-    @Override
-    public void onResume() {
-        // Update the list view onResume,
-        // as it might have been paused not killed
-        super.onResume();
-        ((NoteAdapter)getListAdapter()).notifyDataSetChanged();
     }
 
     @Override
@@ -80,6 +62,38 @@ public class NoteListFragment extends ListFragment
         if (mSubtitleVisible && showSubtitle != null) {
             showSubtitle.setTitle(R.string.hide_subtitle);
         }
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu,
+                                    View view,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+        getActivity().getMenuInflater().inflate(R.menu.note_list_item_context,
+                                                menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        boolean selectionHandled;
+
+        AdapterView.AdapterContextMenuInfo info =
+            (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+        int position = info.position;
+        NoteAdapter adapter = (NoteAdapter)getListAdapter();
+        Note note = adapter.getItem(position);
+
+        switch (item.getItemId()) {
+            case R.id.menu_item_delete_note:
+                Notebook.getInstance(getActivity()).deleteNote(note);
+                adapter.notifyDataSetChanged();
+                selectionHandled = true;
+                break;
+            default:
+                selectionHandled = super.onContextItemSelected(item);
+                break;
+        }
+
+        return selectionHandled;
     }
 
     @TargetApi(11)
@@ -117,6 +131,26 @@ public class NoteListFragment extends ListFragment
         }
 
         return selectionHandled;
+    }
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        Note note = ((NoteAdapter)getListAdapter()).getItem(position);
+
+        // Start NotePagerActivity with this note
+        // NoteListFragment uses getActivity() to pass its hosting
+        // activity as the Context object that the Intent constructor needs
+        Intent intent = new Intent(getActivity(), NotePagerActivity.class);
+        intent.putExtra(NoteFragment.EXTRA_NOTE_ID, note.getId());
+        startActivity(intent);
+    }
+
+    @Override
+    public void onResume() {
+        // Update the list view onResume,
+        // as it might have been paused not killed
+        super.onResume();
+        ((NoteAdapter)getListAdapter()).notifyDataSetChanged();
     }
 
     private class NoteAdapter extends ArrayAdapter<Note> {
