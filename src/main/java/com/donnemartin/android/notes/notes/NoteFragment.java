@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -17,11 +18,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.*;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -38,6 +35,7 @@ public class NoteFragment extends Fragment {
     private Button mPlayButton;
     private AudioPlayer mAudioPlayer;
     private AudioRecorder mAudioRecorder;
+    private ImageButton mPhotoButton;
 
     private static StringBuffer mAudioFileName;
 
@@ -254,6 +252,33 @@ public class NoteFragment extends Fragment {
                 }
             }
         });
+
+        mPhotoButton = (ImageButton)view.findViewById(R.id.note_imageButton);
+        mPhotoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PackageManager pm = getActivity().getPackageManager();
+
+                boolean hasCamera =
+                    pm.hasSystemFeature(PackageManager.FEATURE_CAMERA) ||
+                    pm.hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT) ||
+                    (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD &&
+                    Camera.getNumberOfCameras() > 0);
+
+                if (hasCamera) {
+                    Intent intent = new Intent(getActivity(),
+                                               NoteCameraActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getActivity(),
+                                   getResources()
+                                       .getString(R.string.error_no_camera),
+                                   Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        // If the camera is not available
 
         return view;
     }

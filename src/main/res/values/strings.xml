@@ -12,12 +12,13 @@
     <string name="note_complete_label">Complete?</string>
     <string name="notes_title">Notes</string>
     <string name="date_picker_title">Date of Note:</string>
-    <string name="note_audio">Audio</string>
+    <string name="note_media">Media</string>
     <string name="note_play">Play</string>
     <string name="note_stop">Stop</string>
     <string name="note_pause">Pause</string>
     <string name="note_record">Record</string>
     <string name="error_no_mic">No mic found</string>
+    <string name="error_no_camera">No camera found</string>
     <string name="error_saving">Error while saving</string>
     <string name="new_note">New Note</string>
     <string name="show_subtitle">Show Subtitle</string>
@@ -25,5 +26,6 @@
     <string name="subtitle">Remember Everything</string>
     <string name="delete_note">Delete</string>
     <string name="notes_deleted">Note(s) Deleted</string>
+    <string name="take">Take</string>
 
 </resources>
