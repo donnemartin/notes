@@ -1,6 +1,9 @@
 package com.donnemartin.android.notes.notes;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
@@ -9,15 +12,68 @@ import android.util.Log;
 import android.view.*;
 import android.widget.Button;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 public class NoteCameraFragment extends Fragment {
 
     private static final String TAG = "NoteCameraFragment";
+    public static final String EXTRA_PHOTO_FILENAME =
+        "com.donnemartin.android.notes.photo_filename";
 
     private Camera mCamera;
     private SurfaceView mSurfaceview;
+    private View mProgressContainer;
+
+    private Camera.ShutterCallback mShutterCallback =
+        new Camera.ShutterCallback() {
+        public void onShutter() {
+            // Display the progress indicator
+            mProgressContainer.setVisibility(View.VISIBLE);
+        }
+    };
+
+    private Camera.PictureCallback mJpegCallBack =
+        new Camera.PictureCallback() {
+        public void onPictureTaken(byte[] dataJpeg, Camera camera) {
+            String fileName = UUID.randomUUID().toString() + ".jpg";
+            FileOutputStream os = null;
+            boolean success = true;
+
+            try {
+                os = getActivity().openFileOutput(fileName,
+                                                  Context.MODE_PRIVATE);
+                os.write(dataJpeg);
+            } catch (Exception e) {
+                Log.e(TAG, "Error writing to file " + fileName, e);
+                success = false;
+            } finally {
+                try {
+                    if (os != null) {
+                        os.close();
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, "Error closing file " + fileName, e);
+                    success = false;
+                }
+            }
+
+            if (success) {
+                // Set the photo filename on the result intent
+                if (success) {
+                    Intent intent = new Intent();
+                    intent.putExtra(EXTRA_PHOTO_FILENAME, fileName);
+                    getActivity().setResult(Activity.RESULT_OK, intent);
+                } else {
+                    getActivity().setResult(Activity.RESULT_CANCELED);
+                }
+            }
+
+            getActivity().finish();
+        }
+    };
 
     @SuppressWarnings("deprecation")
     @Override
@@ -32,7 +88,9 @@ public class NoteCameraFragment extends Fragment {
             .findViewById(R.id.note_camera_takePictureButton);
         takePictureButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                getActivity().finish();
+                if (mCamera != null) {
+                    mCamera.takePicture(mShutterCallback, null, mJpegCallBack);
+                }
             }
         });
 
@@ -79,6 +137,13 @@ public class NoteCameraFragment extends Fragment {
                                               width,
                                               height);
                     params.setPreviewSize(size.width, size.height);
+
+                    size =
+                        getOptimalPreviewSize(params.getSupportedPictureSizes(),
+                                              width,
+                                              height);
+                    params.setPictureSize(size.width, size.height);
+
                     mCamera.setParameters(params);
 
                     try {
@@ -92,6 +157,10 @@ public class NoteCameraFragment extends Fragment {
                 }
             }
         });
+
+        mProgressContainer =
+            view.findViewById(R.id.note_camera_progressContainer);
+        mProgressContainer.setVisibility(View.INVISIBLE);
 
         return view;
     }

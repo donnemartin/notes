@@ -13,6 +13,7 @@ public class Note {
     private String mContent;
     private String mAudioFilename;
     private Date mDate;
+    private Photo mPhoto;
     private boolean mComplete;
 
     private static final String JSON_ID = "id";
@@ -21,6 +22,7 @@ public class Note {
     private static final String JSON_AUDIO_FILENAME = "audio_filename";
     private static final String JSON_COMPLETE = "complete";
     private static final String JSON_DATE = "date";
+    private static final String JSON_PHOTO = "photo";
 
     public Note() {
         mId = UUID.randomUUID();
@@ -38,6 +40,9 @@ public class Note {
         }
         if (json.has(JSON_AUDIO_FILENAME)) {
             mAudioFilename = json.getString(JSON_AUDIO_FILENAME);
+        }
+        if (json.has(JSON_PHOTO)) {
+            mPhoto = new Photo(json.getJSONObject(JSON_PHOTO));
         }
 
         mComplete = json.getBoolean(JSON_COMPLETE);
@@ -57,6 +62,9 @@ public class Note {
         json.put(JSON_AUDIO_FILENAME, mAudioFilename);
         json.put(JSON_COMPLETE, mComplete);
         json.put(JSON_DATE, mDate.getTime());
+        if (mPhoto != null) {
+            json.put(JSON_PHOTO, mPhoto.toJSON());
+        }
         return json;
     }
 
@@ -102,5 +110,13 @@ public class Note {
 
     public void setAudioFilename(String audioFilename) {
         mAudioFilename = audioFilename;
+    }
+
+    public Photo getPhoto() {
+        return mPhoto;
+    }
+
+    public void setPhoto(Photo photo) {
+        mPhoto = photo;
     }
 }

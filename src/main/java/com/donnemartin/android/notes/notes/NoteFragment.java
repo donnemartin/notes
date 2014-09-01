@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.BitmapDrawable;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Bundle;
@@ -36,16 +37,21 @@ public class NoteFragment extends Fragment {
     private AudioPlayer mAudioPlayer;
     private AudioRecorder mAudioRecorder;
     private ImageButton mPhotoButton;
+    private ImageView mPhotoView;
 
     private static StringBuffer mAudioFileName;
+
+    private static final String TAG = "NoteFragment";
 
     public static final String EXTRA_NOTE_ID =
         "com.donnemartin.android.notes.note_id";
 
     private static final String AUDIO_POS_INDEX = "audio_pos_index";
+    private static final String DIALOG_IMAGE = "image";
 
     private static final String DIALOG_DATE = "date";
     private static final int REQUEST_DATE = 0;
+    private static final int REQUEST_PHOTO = 1;
 
     public static NoteFragment newInstance(UUID noteId) {
     // Attaching arguments to a fragment must be done after the fragment
@@ -268,7 +274,7 @@ public class NoteFragment extends Fragment {
                 if (hasCamera) {
                     Intent intent = new Intent(getActivity(),
                                                NoteCameraActivity.class);
-                    startActivity(intent);
+                    startActivityForResult(intent, REQUEST_PHOTO);
                 } else {
                     Toast.makeText(getActivity(),
                                    getResources()
@@ -278,7 +284,22 @@ public class NoteFragment extends Fragment {
             }
         });
 
-        // If the camera is not available
+        mPhotoView = (ImageView) view.findViewById(R.id.note_imageView);
+        mPhotoView.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Photo photo = mNote.getPhoto();
+
+                if (photo != null) {
+                    FragmentManager fm = getActivity()
+                        .getSupportFragmentManager();
+                    String path = getActivity().getFileStreamPath(
+                        photo.getFileName()).getAbsolutePath();
+                    ImageFragment.newInstance(path)
+                        .show(fm, DIALOG_IMAGE);
+                }
+            }
+        });
+
 
         return view;
     }
@@ -291,6 +312,15 @@ public class NoteFragment extends Fragment {
                     .getSerializableExtra(DatePickerFragment.EXTRA_DATE);
                 mNote.setDate(date);
                 setFormattedDateButton(getActivity());
+            } else if (requestCode == REQUEST_PHOTO) {
+                // Create a new photo object and attach it to the note
+                String fileName = data
+                    .getStringExtra(NoteCameraFragment.EXTRA_PHOTO_FILENAME);
+                if (fileName != null) {
+                    Photo photo = new Photo(fileName);
+                    mNote.setPhoto(photo);
+                    showPhoto();
+                }
             }
         }
     }
@@ -341,5 +371,32 @@ public class NoteFragment extends Fragment {
                                    .getString(R.string.error_saving),
                            Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        showPhoto();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        PictureUtils.cleanImageView(mPhotoView);
+    }
+
+    private void showPhoto() {
+        // Reset the image button's image based o our photo
+        Photo photo = mNote.getPhoto();
+        BitmapDrawable bitmapDrawable = null;
+
+        if (photo != null) {
+            String path = getActivity()
+                .getFileStreamPath(photo.getFileName()).getAbsolutePath();
+            bitmapDrawable = PictureUtils.getScaledDrawable(getActivity(),
+                                                            path);
+        }
+
+        mPhotoView.setImageDrawable(bitmapDrawable);
     }
 }

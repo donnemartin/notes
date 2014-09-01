@@ -20,7 +20,19 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@string/take" />
-
     </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/note_camera_progressContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true" >
+
+        <ProgressBar
+            style="@android:style/Widget.ProgressBar.Large"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </FrameLayout>
 
 </FrameLayout>
