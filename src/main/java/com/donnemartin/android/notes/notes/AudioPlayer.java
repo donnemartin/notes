@@ -59,7 +59,7 @@ public class AudioPlayer {
             new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                // XXX: Notify that audio has completed
+                // TODO: Notify that audio has completed
                 // so we can change the button text
                 stop();
             }

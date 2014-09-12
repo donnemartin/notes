@@ -243,7 +243,7 @@ public class NoteListFragment extends ListFragment
 
         private String getFormattedDate(FragmentActivity activity,
                                         Note note) {
-            // XXX: Duplicated code, original in NoteFragment.java
+            // TODO: Duplicated code, original in NoteFragment.java
             String formattedDate = "";
 
             if (activity != null) {

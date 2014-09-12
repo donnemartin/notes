@@ -170,7 +170,7 @@ public class NoteCameraFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        // XXX: Opening camera on the main thread, use multi-threading instead
+        // TODO: Opening camera on the main thread, use multi-threading instead
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
             // Open the first camera, which is usually the rear-facing
             // camera, or the front facing camera if there is no rear

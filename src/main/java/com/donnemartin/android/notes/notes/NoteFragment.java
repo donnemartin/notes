@@ -58,7 +58,7 @@ public class NoteFragment extends Fragment {
     // is created but before it is added to an activity.
     // This function uses the standard convention, call this function
     // instead of the constructor directly.
-    // XXX: Should the constructor be marked as private?
+    // TODO: Should the constructor be marked as private?
         Bundle args = new Bundle();
         args.putSerializable(EXTRA_NOTE_ID, noteId);
 
@@ -115,7 +115,7 @@ public class NoteFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup parent,
                              Bundle savedInstanceState) {
-        // XXX: Might be a problem if a title contains characters that
+        // TODO: Might be a problem if a title contains characters that
         // are not allowed by the Android file system
         // Ask the user to supply a file name instead
         // This is also written to external storage, whereas
