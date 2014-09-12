@@ -26,6 +26,6 @@
     <string name="subtitle">Remember Everything</string>
     <string name="delete_note">Delete</string>
     <string name="notes_deleted">Note(s) Deleted</string>
-    <string name="take">Take</string>
+    <string name="capture">Capture</string>
 
 </resources>
