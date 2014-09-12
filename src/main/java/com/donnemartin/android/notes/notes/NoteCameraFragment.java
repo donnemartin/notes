@@ -144,6 +144,12 @@ public class NoteCameraFragment extends Fragment {
                                               height);
                     params.setPictureSize(size.width, size.height);
 
+                    List<String> focusModes = params.getSupportedFocusModes();
+                    if (focusModes
+                        .contains(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO)) {
+                        params.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
+                    }
+
                     mCamera.setParameters(params);
 
                     try {
