@@ -1,7 +1,7 @@
 notes
 ============
 
-Android note taking app, still early in its development.
+Android note taking app, still early in its development.  Supports text notes, checkboxes, audio, photos, and videos.
 
 Compatible with Froyo and later devices.
 
@@ -38,14 +38,6 @@ Android features used in this app:
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-
-##Credits
-
-This project uses code as a guide from the excellent book [Android Programming: The Big Nerd Ranch Guide](http://www.bignerdranch.com/we-write/android-programming.html).
-
-You can [download the original exercises for Android](http://www.bignerdranch.com/solutions/AndroidProgramming.zip) from the Big Nerd Ranch website.
-
-It has since evolved to include tweaks and additional functionality.
 
 ![alt tag](https://raw.githubusercontent.com/donnemartin/notes/master/src/main/res/raw/notes1.png)
 
