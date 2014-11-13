@@ -1,7 +1,7 @@
 notes
 ============
 
-Android note taking app, still early in its development.  Supports text notes, checkboxes, audio, photos, and videos.
+Android note taking app, still early in its development.  Supports text notes, checkboxes, audio, photos, and (soon) videos.
 
 Compatible with Froyo and later devices.
 
