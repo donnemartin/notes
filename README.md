@@ -1,3 +1,5 @@
+![alt text](http://donnemartin.com/wp-content/uploads/2015/02/notes_cover.jpeg)
+
 notes
 ============
 
